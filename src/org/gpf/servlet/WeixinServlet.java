@@ -66,7 +66,7 @@ public class WeixinServlet extends HttpServlet {
 				}else if ("?".equals(content) || "？".equals(content)) {
 					message = MessageUtil.initText(fromUserName, toUserName, MessageUtil.menuText());
 				}else {
-					message = MessageUtil.initText(fromUserName, toUserName, "没有您的城市/::D/::D/::D，您输入的内容是：\n" + content + "\n欢迎使用本订阅号。" + "当前时间：" + new SimpleDateFormat("yyyy-MM-dd HH:ss.SSS").format(new Date()) + "<a href='http://www.cnblogs.com/happyfans/'>阅读几篇文章吧</a>");
+					message = MessageUtil.initText(fromUserName, toUserName, "没有您的城市/::D/::D/::D，您输入的内容是：\n" + content + "\n欢迎使用本订阅号。" + "\n当前时间：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()) + "<a href='http://www.cnblogs.com/happyfans/'>阅读几篇文章吧</a>");
 				}
 				
 			}else if (MessageUtil.MESSAGE_EVENT.equals(msgType)) {	// 事件推送
