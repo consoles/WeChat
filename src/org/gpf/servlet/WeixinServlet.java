@@ -46,7 +46,6 @@ public class WeixinServlet extends HttpServlet {
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/xml;charset=utf-8");
 		PrintWriter out = response.getWriter();
@@ -65,6 +64,12 @@ public class WeixinServlet extends HttpServlet {
 					message = MessageUtil.initText(fromUserName, toUserName, WeatherUtil.getWeather(WEATHER_API).get(index).toString());
 				}else if ("?".equals(content) || "？".equals(content)) {
 					message = MessageUtil.initText(fromUserName, toUserName, MessageUtil.menuText());
+				}else if("图文消息".equals(content)){
+					message = MessageUtil.initNewsMessage(fromUserName, toUserName);
+				}else if("图片消息".equals(content)){
+					message = MessageUtil.initImageMessage(fromUserName, toUserName);
+				}else if("音乐".equals(content)){
+					message = MessageUtil.initMusicMessage(fromUserName, toUserName);
 				}else {
 					message = MessageUtil.initText(fromUserName, toUserName, "没有您的城市/::D/::D/::D，您输入的内容是：\n" + content + "\n欢迎使用本订阅号。" + "\n当前时间：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date()) + "<a href='http://www.cnblogs.com/happyfans/'>阅读几篇文章吧</a>");
 				}
@@ -73,7 +78,19 @@ public class WeixinServlet extends HttpServlet {
 				String eventType = map.get("Event");	// 到底是什么推送事件
 				if (MessageUtil.MESSAGE_SUBSCRIBE.equals(eventType)) {
 					message = MessageUtil.initText(fromUserName, toUserName, MessageUtil.menuText());
+				} else if(MessageUtil.MESSAGE_CLICK.equals(eventType)){
+					
+					message = MessageUtil.initText(fromUserName, toUserName,"主菜单");
+				} else if(MessageUtil.MESSAGE_VIEW.equals(eventType)){
+					String url = map.get("EventKey");
+					message = MessageUtil.initText(fromUserName, toUserName,url);
+				} else if (MessageUtil.MESSAGE_SCANCODE.equals(eventType)) {
+					String key = map.get("EventKey");
+					message = MessageUtil.initText(fromUserName, toUserName,key);
 				}
+			} else if (MessageUtil.MESSAGE_LOCATION.equals(msgType)) {
+				String label = map.get("Label");
+				message = MessageUtil.initText(fromUserName, toUserName,label);
 			}
 			System.out.println(message);			
 			out.print(message);							// 将回应发送给微信服务器
